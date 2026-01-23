@@ -3,7 +3,25 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardHeader, CardTitle, CardContent, Button, Badge } from '../components/ui';
 import { lessonCategories } from '../data/lessons';
-import type { Lesson } from '../types';
+import type { Lesson, LessonSubcategory } from '../types';
+
+// Recursively collect lessons from subcategories (handles nested children)
+const collectLessonsFromSubcategory = (
+  subcategory: LessonSubcategory,
+  categoryTitle: string,
+  result: { lesson: Lesson; categoryTitle: string }[]
+) => {
+  subcategory.lessons.forEach((lesson) => {
+    if (lesson.tasks.length > 0) {
+      result.push({ lesson, categoryTitle });
+    }
+  });
+  if (subcategory.children) {
+    subcategory.children.forEach((child) => {
+      collectLessonsFromSubcategory(child, categoryTitle, result);
+    });
+  }
+};
 
 export function Tasks() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -12,11 +30,7 @@ export function Tasks() {
   const allLessons: { lesson: Lesson; categoryTitle: string }[] = [];
   lessonCategories.forEach((category) => {
     category.subcategories.forEach((subcategory) => {
-      subcategory.lessons.forEach((lesson) => {
-        if (lesson.tasks.length > 0) {
-          allLessons.push({ lesson, categoryTitle: category.title });
-        }
-      });
+      collectLessonsFromSubcategory(subcategory, category.title, allLessons);
     });
   });
 

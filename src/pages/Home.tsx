@@ -2,6 +2,20 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button, Card, CardHeader, CardTitle, CardContent } from '../components/ui';
 import { lessonCategories } from '../data/lessons';
+import type { LessonCategory, LessonSubcategory } from '../types';
+
+// Count lessons recursively (handles nested children for tenses)
+const countSubcategoryLessons = (subcategory: LessonSubcategory): number => {
+  let count = subcategory.lessons.length;
+  if (subcategory.children) {
+    count += subcategory.children.reduce((sum, child) => sum + countSubcategoryLessons(child), 0);
+  }
+  return count;
+};
+
+const countCategoryLessons = (category: LessonCategory): number => {
+  return category.subcategories.reduce((acc, sub) => acc + countSubcategoryLessons(sub), 0);
+};
 
 export function Home() {
   const features = [
@@ -116,7 +130,7 @@ export function Home() {
                     <CardContent>
                       <p>{category.description}</p>
                       <p className="text-sm text-[var(--color-primary)] mt-2">
-                        {category.subcategories.reduce((acc, sub) => acc + sub.lessons.length, 0)} lessons
+                        {countCategoryLessons(category)} lessons
                       </p>
                     </CardContent>
                   </Card>

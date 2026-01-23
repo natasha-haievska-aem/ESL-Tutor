@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardHeader, CardTitle, CardContent, Badge } from '../components/ui';
 import { lessonCategories } from '../data/lessons';
+import type { LessonSubcategory, Lesson } from '../types';
 
 export function Lessons() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>('tenses');
-  const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>('present');
+  const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>('active-voice');
+  const [expandedChild, setExpandedChild] = useState<string | null>('present-active');
 
   const getDifficultyVariant = (difficulty: string) => {
     switch (difficulty) {
@@ -21,6 +23,38 @@ export function Lessons() {
     }
   };
 
+  // Count total lessons including nested children
+  const countLessons = (subcategory: LessonSubcategory): number => {
+    let count = subcategory.lessons.length;
+    if (subcategory.children) {
+      count += subcategory.children.reduce((sum, child) => sum + countLessons(child), 0);
+    }
+    return count;
+  };
+
+  // Render a lesson card
+  const renderLessonCard = (lesson: Lesson) => (
+    <Link key={lesson.id} to={`/lesson/${lesson.id}`}>
+      <Card hover className="h-full">
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <CardTitle className="text-lg">{lesson.title}</CardTitle>
+            <Badge variant={getDifficultyVariant(lesson.difficulty)}>
+              {lesson.difficulty}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm">{lesson.description}</p>
+          <div className="flex gap-4 mt-3 text-xs text-[var(--color-text-muted)]">
+            <span>📝 {lesson.tasks.length} tasks</span>
+            <span>🎯 {lesson.quiz.questions.length} quiz questions</span>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
@@ -34,7 +68,7 @@ export function Lessons() {
             <span className="gradient-text">Grammar Lessons</span>
           </h1>
           <p className="text-[var(--color-text-muted)] max-w-2xl mx-auto">
-            Explore our comprehensive collection of English grammar lessons. 
+            Explore our comprehensive collection of English grammar lessons.
             Click on a category to see available topics.
           </p>
         </motion.div>
@@ -51,10 +85,10 @@ export function Lessons() {
               <Card className="overflow-hidden">
                 {/* Category Header */}
                 <button
-                  onClick={() => setExpandedCategory(
-                    expandedCategory === category.id ? null : category.id
-                  )}
-                  className="w-full flex items-center justify-between p-6 hover:bg-white/5 transition-colors text-left"
+                  onClick={() =>
+                    setExpandedCategory(expandedCategory === category.id ? null : category.id)
+                  }
+                  className="w-full flex items-center justify-between p-6 rounded-xl hover:bg-white/5 transition-colors text-left"
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">{category.icon}</span>
@@ -86,18 +120,22 @@ export function Lessons() {
                           <div key={subcategory.id} className="glass rounded-xl overflow-hidden">
                             {/* Subcategory Header */}
                             <button
-                              onClick={() => setExpandedSubcategory(
-                                expandedSubcategory === subcategory.id ? null : subcategory.id
-                              )}
+                              onClick={() =>
+                                setExpandedSubcategory(
+                                  expandedSubcategory === subcategory.id ? null : subcategory.id
+                                )
+                              }
                               className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors text-left"
                             >
                               <h3 className="text-lg font-semibold">{subcategory.title}</h3>
                               <div className="flex items-center gap-3">
                                 <span className="text-sm text-[var(--color-text-muted)]">
-                                  {subcategory.lessons.length} lessons
+                                  {countLessons(subcategory)} lessons
                                 </span>
                                 <motion.span
-                                  animate={{ rotate: expandedSubcategory === subcategory.id ? 180 : 0 }}
+                                  animate={{
+                                    rotate: expandedSubcategory === subcategory.id ? 180 : 0,
+                                  }}
                                   className="text-[var(--color-text-muted)]"
                                 >
                                   ▼
@@ -105,7 +143,7 @@ export function Lessons() {
                               </div>
                             </button>
 
-                            {/* Lessons */}
+                            {/* Subcategory Content */}
                             <AnimatePresence>
                               {expandedSubcategory === subcategory.id && (
                                 <motion.div
@@ -115,29 +153,68 @@ export function Lessons() {
                                   transition={{ duration: 0.3 }}
                                   className="overflow-hidden"
                                 >
-                                  <div className="p-4 pt-0 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                    {subcategory.lessons.map((lesson) => (
-                                      <Link key={lesson.id} to={`/lesson/${lesson.id}`}>
-                                        <Card hover className="h-full">
-                                          <CardHeader>
-                                            <div className="flex items-start justify-between">
-                                              <CardTitle className="text-lg">{lesson.title}</CardTitle>
-                                              <Badge variant={getDifficultyVariant(lesson.difficulty)}>
-                                                {lesson.difficulty}
-                                              </Badge>
+                                  {/* Nested Children (e.g., Present/Past/Future inside Active Voice) */}
+                                  {subcategory.children && subcategory.children.length > 0 ? (
+                                    <div className="p-4 pt-0 space-y-3">
+                                      {subcategory.children.map((child) => (
+                                        <div
+                                          key={child.id}
+                                          className="bg-white/5 rounded-lg overflow-hidden"
+                                        >
+                                          {/* Child Header */}
+                                          <button
+                                            onClick={() =>
+                                              setExpandedChild(
+                                                expandedChild === child.id ? null : child.id
+                                              )
+                                            }
+                                            className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors text-left"
+                                          >
+                                            <h4 className="font-medium text-[var(--color-text-muted)]">
+                                              {child.title}
+                                            </h4>
+                                            <div className="flex items-center gap-2">
+                                              <span className="text-xs text-[var(--color-text-muted)]">
+                                                {child.lessons.length} lessons
+                                              </span>
+                                              <motion.span
+                                                animate={{
+                                                  rotate: expandedChild === child.id ? 180 : 0,
+                                                }}
+                                                className="text-sm text-[var(--color-text-muted)]"
+                                              >
+                                                ▼
+                                              </motion.span>
                                             </div>
-                                          </CardHeader>
-                                          <CardContent>
-                                            <p className="text-sm">{lesson.description}</p>
-                                            <div className="flex gap-4 mt-3 text-xs text-[var(--color-text-muted)]">
-                                              <span>📝 {lesson.tasks.length} tasks</span>
-                                              <span>🎯 {lesson.quiz.questions.length} quiz questions</span>
-                                            </div>
-                                          </CardContent>
-                                        </Card>
-                                      </Link>
-                                    ))}
-                                  </div>
+                                          </button>
+
+                                          {/* Child Lessons */}
+                                          <AnimatePresence>
+                                            {expandedChild === child.id && (
+                                              <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="overflow-hidden"
+                                              >
+                                                <div className="p-3 pt-0 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                                                  {child.lessons.map((lesson) =>
+                                                    renderLessonCard(lesson)
+                                                  )}
+                                                </div>
+                                              </motion.div>
+                                            )}
+                                          </AnimatePresence>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    /* Direct Lessons (no nesting) */
+                                    <div className="p-4 pt-0 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                      {subcategory.lessons.map((lesson) => renderLessonCard(lesson))}
+                                    </div>
+                                  )}
                                 </motion.div>
                               )}
                             </AnimatePresence>

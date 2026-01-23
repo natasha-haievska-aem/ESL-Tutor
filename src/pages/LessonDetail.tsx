@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Button, Card, Badge } from '../components/ui';
+import { Button, Card, Badge, StructureFormulaDisplay } from '../components/ui';
 import { getLessonById } from '../data/lessons';
 import type { Task, QuizQuestion } from '../types';
 
@@ -143,40 +143,54 @@ export function LessonDetail() {
 
             <Card>
               <h2 className="text-xl font-bold mb-4">📐 Structure</h2>
-              <div className="bg-black/20 rounded-lg p-4">
-                {lesson.content.structure.split('\n').map((line: string, i: number) => (
-                  <p key={i} className="text-[var(--color-text)] font-mono text-sm mb-1">
-                    {line}
-                  </p>
-                ))}
-              </div>
+              {lesson.content.structureFormula ? (
+                <StructureFormulaDisplay
+                  formula={lesson.content.structureFormula}
+                  description="Select a mode below to see how the sentence structure changes."
+                />
+              ) : lesson.content.structure ? (
+                <div className="bg-black/20 rounded-lg p-4">
+                  {lesson.content.structure.split('\n').map((line: string, i: number) => (
+                    <p key={i} className="text-[var(--color-text)] font-mono text-sm mb-1">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
             </Card>
 
             <Card>
               <h2 className="text-xl font-bold mb-4">💡 Examples</h2>
               <div className="space-y-3">
-                {lesson.content.examples.map((example: { sentence: string; highlight?: string }, i: number) => (
-                  <div key={i} className="bg-white/5 rounded-lg p-3">
-                    <p className="text-lg">
-                      {example.highlight ? (
-                        <>
-                          {example.sentence.split(example.highlight).map((part, j, arr) => (
-                            <span key={j}>
-                              {part}
-                              {j < arr.length - 1 && (
-                                <span className="text-[var(--color-primary)] font-semibold">
-                                  {example.highlight}
-                                </span>
-                              )}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        example.sentence
-                      )}
-                    </p>
-                  </div>
-                ))}
+                {lesson.content.examples.map((example: { sentence: string; highlight?: string | string[] }, i: number) => {
+                  // Helper to highlight multiple terms in a sentence
+                  const renderHighlightedSentence = () => {
+                    if (!example.highlight) return example.sentence;
+                    
+                    const highlights = Array.isArray(example.highlight) ? example.highlight : [example.highlight];
+                    let result: (string | React.ReactNode)[] = [example.sentence];
+                    
+                    highlights.forEach((term, termIdx) => {
+                      result = result.flatMap((segment) => {
+                        if (typeof segment !== 'string') return segment;
+                        const parts = segment.split(term);
+                        return parts.flatMap((part, idx) =>
+                          idx < parts.length - 1
+                            ? [part, <span key={`${termIdx}-${idx}`} className="text-[var(--color-primary)] font-semibold">{term}</span>]
+                            : [part]
+                        );
+                      });
+                    });
+                    
+                    return result;
+                  };
+
+                  return (
+                    <div key={i} className="bg-white/5 rounded-lg p-3">
+                      <p className="text-lg">{renderHighlightedSentence()}</p>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
 
