@@ -12,7 +12,7 @@ export function Card({ children, className = '', hover = false, onClick }: CardP
     <div
       onClick={onClick}
       className={`
-        glass rounded-2xl p-6
+        glass rounded-2xl p-3 md:p-6
         ${hover ? 'cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/30' : ''}
         ${onClick ? 'cursor-pointer' : ''}
         ${className}

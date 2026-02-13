@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardHeader, CardTitle, CardContent, Badge } from '../components/ui';
+import { Card, CardHeader, CardTitle, CardContent, Badge, QrCodeModal } from '../components/ui';
 import { lessonCategories } from '../data/lessons';
 import type { LessonSubcategory, Lesson } from '../types';
 
@@ -9,6 +9,7 @@ export function Lessons() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>('tenses');
   const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>('active-voice');
   const [expandedChild, setExpandedChild] = useState<string | null>('present-active');
+  const [qrLesson, setQrLesson] = useState<Lesson | null>(null);
 
   const getDifficultyVariant = (difficulty: string) => {
     switch (difficulty) {
@@ -39,9 +40,29 @@ export function Lessons() {
         <CardHeader>
           <div className="flex items-start justify-between">
             <CardTitle className="text-lg">{lesson.title}</CardTitle>
-            <Badge variant={getDifficultyVariant(lesson.difficulty)}>
-              {lesson.difficulty}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <button
+                title="Show QR Code"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setQrLesson(lesson);
+                }}
+                className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-white/10 transition-all"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="8" height="8" rx="1" />
+                  <rect x="14" y="2" width="8" height="8" rx="1" />
+                  <rect x="2" y="14" width="8" height="8" rx="1" />
+                  <rect x="14" y="14" width="4" height="4" rx="1" />
+                  <rect x="20" y="14" width="2" height="2" />
+                  <rect x="14" y="20" width="2" height="2" />
+                  <rect x="20" y="20" width="2" height="2" />
+                </svg>
+              </button>
+              <Badge variant={getDifficultyVariant(lesson.difficulty)}>
+                {lesson.difficulty}
+              </Badge>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -115,7 +136,7 @@ export function Lessons() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 space-y-4">
+                      <div className="px-3 pb-6 space-y-4 md:px-6">
                         {category.subcategories.map((subcategory) => (
                           <div key={subcategory.id} className="glass rounded-xl overflow-hidden">
                             {/* Subcategory Header */}
@@ -155,7 +176,7 @@ export function Lessons() {
                                 >
                                   {/* Nested Children (e.g., Present/Past/Future inside Active Voice) */}
                                   {subcategory.children && subcategory.children.length > 0 ? (
-                                    <div className="p-4 pt-0 space-y-3">
+                                    <div className="p-4  space-y-3">
                                       {subcategory.children.map((child) => (
                                         <div
                                           key={child.id}
@@ -198,7 +219,7 @@ export function Lessons() {
                                                 transition={{ duration: 0.3 }}
                                                 className="overflow-hidden"
                                               >
-                                                <div className="p-3 pt-0 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                                                <div className="p-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                                                   {child.lessons.map((lesson) =>
                                                     renderLessonCard(lesson)
                                                   )}
@@ -211,7 +232,7 @@ export function Lessons() {
                                     </div>
                                   ) : (
                                     /* Direct Lessons (no nesting) */
-                                    <div className="p-4 pt-0 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                    <div className="p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                                       {subcategory.lessons.map((lesson) => renderLessonCard(lesson))}
                                     </div>
                                   )}
@@ -229,6 +250,16 @@ export function Lessons() {
           ))}
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      {qrLesson && (
+        <QrCodeModal
+          lessonId={qrLesson.id}
+          lessonTitle={qrLesson.title}
+          isOpen={!!qrLesson}
+          onClose={() => setQrLesson(null)}
+        />
+      )}
     </div>
   );
 }
