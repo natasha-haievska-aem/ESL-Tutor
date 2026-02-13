@@ -30,7 +30,7 @@ export function Button({
     outline:
       'border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white focus:ring-[var(--color-primary)]',
     ghost:
-      'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-white/5 focus:ring-white/20',
+      'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-hover)] focus:ring-[var(--color-border)]',
   };
 
   const sizes = {

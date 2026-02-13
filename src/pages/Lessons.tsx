@@ -47,7 +47,7 @@ export function Lessons() {
                   e.preventDefault();
                   setQrLesson(lesson);
                 }}
-                className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-white/10 transition-all"
+                className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-hover)] transition-all"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="8" height="8" rx="1" />
@@ -109,7 +109,7 @@ export function Lessons() {
                   onClick={() =>
                     setExpandedCategory(expandedCategory === category.id ? null : category.id)
                   }
-                  className="w-full flex items-center justify-between p-6 rounded-xl hover:bg-white/5 transition-colors text-left"
+                  className="w-full flex items-center justify-between p-6 rounded-xl hover:bg-[var(--color-hover)] transition-colors text-left"
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">{category.icon}</span>
@@ -146,7 +146,7 @@ export function Lessons() {
                                   expandedSubcategory === subcategory.id ? null : subcategory.id
                                 )
                               }
-                              className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors text-left"
+                              className="w-full flex items-center justify-between p-4 hover:bg-[var(--color-hover)] transition-colors text-left"
                             >
                               <h3 className="text-lg font-semibold">{subcategory.title}</h3>
                               <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export function Lessons() {
                                       {subcategory.children.map((child) => (
                                         <div
                                           key={child.id}
-                                          className="bg-white/5 rounded-lg overflow-hidden"
+                                          className="bg-[var(--color-hover)] rounded-lg overflow-hidden"
                                         >
                                           {/* Child Header */}
                                           <button
@@ -189,7 +189,7 @@ export function Lessons() {
                                                 expandedChild === child.id ? null : child.id
                                               )
                                             }
-                                            className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors text-left"
+                                            className="w-full flex items-center justify-between p-3 hover:bg-[var(--color-hover)] transition-colors text-left"
                                           >
                                             <h4 className="font-medium text-[var(--color-text-muted)]">
                                               {child.title}

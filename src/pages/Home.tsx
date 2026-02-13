@@ -92,7 +92,7 @@ export function Home() {
       </section>
 
       {/* Categories Preview */}
-      <section className="py-16 px-4 bg-white/5">
+      <section className="py-16 px-4 bg-[var(--color-section-bg)]">
         <div className="max-w-6xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

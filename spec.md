@@ -9,16 +9,26 @@ ESL-Tutor is an interactive English as a Second Language (ESL) learning web appl
 
 ---
 
+## Version History
+
+| Version | Description                   |
+| ------- | ----------------------------- |
+| 1.0     | MVP — lessons, tasks, quizzes |
+| 1.1     | QR codes on lessons           |
+| 1.2     | Dark / light theme switcher   |
+
+---
+
 ## Tech Stack
 
-| Layer          | Technology                                   |
-| -------------- | -------------------------------------------- |
-| **Framework**  | React 19.2 with Vite 7.2                     |
-| **Language**   | TypeScript 5.9                               |
-| **Styling**    | Tailwind CSS 4.1 (CSS variables, dark theme) |
-| **Routing**    | React Router DOM 7.12                        |
-| **Animations** | Framer Motion 12.29                          |
-| **Build**      | Vite with `@vitejs/plugin-react`             |
+| Layer          | Technology                                           |
+| -------------- | ---------------------------------------------------- |
+| **Framework**  | React 19.2 with Vite 7.2                             |
+| **Language**   | TypeScript 5.9                                       |
+| **Styling**    | Tailwind CSS 4.1 (CSS variables, dark / light theme) |
+| **Routing**    | React Router DOM 7.12                                |
+| **Animations** | Framer Motion 12.29                                  |
+| **Build**      | Vite with `@vitejs/plugin-react`                     |
 
 ---
 
@@ -34,6 +44,9 @@ src/
 ├── components/
 │   ├── layout/             # Header, Footer, Layout wrapper
 │   └── ui/                 # Reusable UI: Button, Card, Badge, StructureFormula
+│
+├── context/
+│   └── ThemeContext.tsx     # Dark/light theme provider (system-aware)
 │
 ├── pages/
 │   ├── Home.tsx            # Landing page
@@ -133,22 +146,40 @@ Each lesson includes:
 
 ## Design System
 
-### Theme (Dark Mode)
+### Theme (Dark / Light with System Detection)
+
+The app supports dark and light themes with automatic detection of the user's OS preference. Theme choice is persisted to `localStorage` and can be toggled via a button in the header. The toggle cycles through: **system → light → dark**.
+
+#### Dark Theme (default)
+
+```css
+--color-background: #0f172a;
+--color-surface: #1e293b;
+--color-text: #f8fafc;
+--color-text-muted: #94a3b8;
+```
+
+#### Light Theme
+
+```css
+--color-background: #f8fafc;
+--color-surface: #ffffff;
+--color-text: #0f172a;
+--color-text-muted: #64748b;
+```
+
+#### Shared Accent Colors
 
 ```css
 --color-primary: #6366f1; /* Indigo */
 --color-primary-dark: #4f46e5;
 --color-secondary: #f97316; /* Orange */
 --color-success: #22c55e; /* Green */
---color-background: #0f172a; /* Dark blue-gray */
---color-surface: #1e293b; /* Card backgrounds */
---color-text: #f8fafc; /* Light text */
---color-text-muted: #94a3b8; /* Muted text */
 ```
 
 ### Utilities
 
-- `.glass` - Glassmorphism effect with backdrop blur
+- `.glass` - Glassmorphism effect with backdrop blur (adapts per theme)
 - `.gradient-text` - Primary-to-secondary gradient text
 - `.transition-smooth` - Smooth cubic-bezier transitions
 
@@ -179,7 +210,8 @@ npm run preview  # Preview production build
 ## Development Notes
 
 - Uses **Tailwind CSS 4** syntax with `@import "tailwindcss"` and `@theme` blocks
-- CSS variables are used extensively for theming
+- CSS variables are used extensively for theming (dark/light via `data-theme` attribute)
+- Theme state managed by `ThemeContext` in `src/context/ThemeContext.tsx`
 - Framer Motion provides entrance animations and micro-interactions
 - Tenses data is organized hierarchically in `src/data/tenses/` with one file per lesson
 - All lessons must have a `structureFormula` field for the interactive visualization
@@ -191,6 +223,8 @@ npm run preview  # Preview production build
 
 - [ ] Progress tracking / user state persistence
 - [x] Conditionals lesson
+- [x] QR codes on lessons (v1.1)
+- [x] Dark / light theme switcher (v1.2)
 - [ ] More lesson content (reported speech)
 - [ ] Spaced repetition for vocabulary
 - [ ] Audio pronunciation
