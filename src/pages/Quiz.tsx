@@ -110,7 +110,7 @@ export function Quiz() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Link to={`/lesson/${lesson.id}`}>
+              <Link to={`/lesson/${lesson.id}?tab=quiz`}>
                 <Card hover className="h-full">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">

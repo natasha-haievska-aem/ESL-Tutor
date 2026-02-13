@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button, Card, Badge, StructureFormulaDisplay } from '../components/ui';
 import { getLessonById } from '../data/lessons';
@@ -10,7 +10,12 @@ type TabType = 'content' | 'tasks' | 'quiz';
 export function LessonDetail() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabType>('content');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const activeTab: TabType = tabParam === 'tasks' || tabParam === 'quiz' ? tabParam : 'content';
+  const setActiveTab = (tab: TabType) => {
+    setSearchParams({ tab }, { replace: true });
+  };
   const [taskAnswers, setTaskAnswers] = useState<Record<string, string>>({});
   const [taskResults, setTaskResults] = useState<Record<string, boolean>>({});
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
