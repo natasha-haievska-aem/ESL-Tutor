@@ -80,7 +80,7 @@ export function Tasks() {
             className={`px-4 py-2 rounded-full transition-all ${
               selectedCategory === null
                 ? 'bg-[var(--color-primary)] text-white'
-                : 'bg-white/5 text-[var(--color-text-muted)] hover:bg-white/10'
+                : 'bg-[var(--color-hover)] text-[var(--color-text-muted)] hover:bg-[var(--color-section-bg)]'
             }`}
           >
             All Topics
@@ -92,7 +92,7 @@ export function Tasks() {
               className={`px-4 py-2 rounded-full transition-all flex items-center gap-2 ${
                 selectedCategory === category.title
                   ? 'bg-[var(--color-primary)] text-white'
-                  : 'bg-white/5 text-[var(--color-text-muted)] hover:bg-white/10'
+                  : 'bg-[var(--color-hover)] text-[var(--color-text-muted)] hover:bg-[var(--color-section-bg)]'
               }`}
             >
               <span>{category.icon}</span>

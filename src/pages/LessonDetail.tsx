@@ -119,7 +119,7 @@ export function LessonDetail() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-[var(--color-primary)] text-white'
-                  : 'text-[var(--color-text-muted)] hover:bg-white/5'
+                  : 'text-[var(--color-text-muted)] hover:bg-[var(--color-hover)]'
               }`}
             >
               <span>{tab.icon}</span>
@@ -191,7 +191,7 @@ export function LessonDetail() {
                   };
 
                   return (
-                    <div key={i} className="bg-white/5 rounded-lg p-3">
+                    <div key={i} className="bg-[var(--color-hover)] rounded-lg p-3">
                       <p className="text-lg">{renderHighlightedSentence()}</p>
                     </div>
                   );
@@ -239,7 +239,7 @@ export function LessonDetail() {
                           onChange={(e) =>
                             setTaskAnswers((prev) => ({ ...prev, [task.id]: e.target.value }))
                           }
-                          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[var(--color-primary)]"
+                          className="flex-1 bg-[var(--color-hover)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)]"
                           placeholder="Type your answer..."
                         />
                         <Button
@@ -270,7 +270,7 @@ export function LessonDetail() {
                                     ? 'border-[var(--color-success)] bg-[var(--color-success)]/10'
                                     : 'border-red-500 bg-red-500/10'
                                   : 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
-                                : 'border-white/10 hover:border-white/20'
+                                : 'border-[var(--color-border)] hover:border-[var(--color-text-muted)]/30'
                             }`}
                           >
                             {option}
@@ -346,10 +346,10 @@ export function LessonDetail() {
                                 ? 'border-[var(--color-success)] bg-[var(--color-success)]/10'
                                 : quizAnswers[question.id] === option
                                 ? 'border-red-500 bg-red-500/10'
-                                : 'border-white/10 opacity-50'
+                                : 'border-[var(--color-border)] opacity-50'
                               : quizAnswers[question.id] === option
                               ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/10'
-                              : 'border-white/10 hover:border-white/20'
+                              : 'border-[var(--color-border)] hover:border-[var(--color-text-muted)]/30'
                           }`}
                         >
                           {option}

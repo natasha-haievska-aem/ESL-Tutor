@@ -27,7 +27,7 @@ function FormulaParts({ parts }: { parts: StructurePart[] }) {
               min-w-[100px] p-4 rounded-xl text-center
               ${part.highlight
                 ? 'bg-[var(--color-secondary)]/15 border-2 border-[var(--color-secondary)]/30'
-                : 'bg-white/5 border-2 border-white/10'
+                : 'bg-[var(--color-hover)] border-2 border-[var(--color-border)]'
               }
             `}
           >
@@ -97,7 +97,7 @@ function MultipleCasesFormulaDisplay({ formula }: { formula: TenseStructureFormu
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               activeMode === mode.id
                 ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)]'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-white/5'
+                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-hover)]'
             }`}
           >
             {mode.label}

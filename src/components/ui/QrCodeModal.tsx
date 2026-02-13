@@ -59,7 +59,7 @@ export function QrCodeModal({ lessonId, lessonTitle, isOpen, onClose }: QrCodeMo
             <p className="text-sm text-[var(--color-text-muted)] mb-4 truncate">{lessonTitle}</p>
 
             {/* Tab picker */}
-            <div className="flex gap-1 mb-5 bg-white/5 rounded-lg p-1">
+            <div className="flex gap-1 mb-5 bg-[var(--color-hover)] rounded-lg p-1">
               {tabOptions.map((tab) => (
                 <button
                   key={tab.id}
